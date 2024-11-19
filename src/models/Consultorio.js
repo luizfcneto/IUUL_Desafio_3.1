@@ -1,4 +1,5 @@
 import Agenda from "./Agenda.js";
+import Paciente from "./Paciente.js";
 
 export default class Consultorio {
     #pacientes;
@@ -9,7 +10,7 @@ export default class Consultorio {
             this.#pacientes = [];
             this.#agenda = new Agenda();
         }else {
-            this.#pacientes = consultorio?.pacientes?.length > 0 ? consultorio.pacientes.length : [];
+            this.#pacientes = consultorio?.pacientes?.length > 0 ? consultorio.pacientes.map(paciente => Paciente.fromObject(paciente)) : [];
             this.#agenda = consultorio?.agenda === null || consultorio?.agenda === undefined ? new Agenda() : consultorio.agenda;
         }
     }

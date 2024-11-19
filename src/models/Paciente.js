@@ -4,15 +4,15 @@ export default class Paciente {
     #dataNascimento;
     #idade;
 
-    constructor(cpf, nome, dataNascimento){
+    constructor(cpf, nome, dataNascimento, idade = undefined){
         this.#cpf = cpf;
         this.#nome = nome;
         this.#dataNascimento = dataNascimento;
-        this.#setIdade();
+        this.#idade = idade === undefined ? this.#setIdade() : parseInt(idade);
     }
 
     #setIdade(){
-        const [dia, mes, ano] = this.#dataNascimento.split('/');
+        const [dia, mes, ano] = this.dataNascimento.split('/');
         const dataCorrente = new Date();
         const dateNascimento = new Date(ano, mes - 1, dia);
 
@@ -24,7 +24,7 @@ export default class Paciente {
             idade--;
         }
 
-        this.#idade = idade;
+        return idade;
     }
 
     get cpf(){
@@ -44,7 +44,7 @@ export default class Paciente {
     }
 
     toString(){
-        return `${this.cpf} \t${this.nome} \t\t${this.dataNascimento} \t${this.idade}`;
+        return `${this.cpf.padEnd(15)} ${this.nome.padEnd(35)} ${this.dataNascimento.padEnd(15)} ${this.idade}`;
     }
 
     toJSON(){
@@ -54,6 +54,10 @@ export default class Paciente {
             dataNascimento: this.dataNascimento,
             idade: this.idade
         }
+    }
+
+    static fromObject(obj){
+        return new Paciente(obj.cpf, obj.nome, obj.dataNascimento, obj.idade);
     }
 
 }
