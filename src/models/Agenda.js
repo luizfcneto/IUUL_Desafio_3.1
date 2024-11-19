@@ -4,4 +4,19 @@ export default class Agenda {
     constructor(consultas = []){
         this.#consultas = consultas;
     }
+
+
+    get consultas(){
+        return this.#consultas;
+    }
+
+    toString(){
+        return `${this.#consultas}`;
+    }
+
+    toJSON(){
+        return {
+            consultas: this.consultas
+        }
+    }
 }

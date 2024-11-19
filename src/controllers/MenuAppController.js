@@ -1,22 +1,22 @@
 import promptSync from "prompt-sync";
-import Consultorio from "../models/Consultorio.js";
-import Agenda from "../models/Agenda.js";
 import { menuAgenda, menuCadastroPacientes, menuPrincipalView, showEncerrandoPrograma, showEntradaInvalida, showVoltandoMenuPrincipal } from "../views/MenuView.js";
+import PacienteController from "./PacienteController.js";
+import ConsultorioService from "../services/ConsultorioService.js";
 
 const prompt = promptSync({sigint: true});
 
 export default class MenuAppController {
-    #consultorio;
+    #consultorioService;
 
-    constructor(){
-        this.#consultorio = new Consultorio([], new Agenda());
+    constructor(consultorioService = null){
+        if(consultorioService){
+            this.#consultorioService = consultorioService;
+        }else {
+            this.#consultorioService = new ConsultorioService();
+        }
     }
 
-    init(){
-        if(this.#consultorio == null){
-            this.#consultorio = new Consultorio([], new Agenda());
-        }
-
+    async init(){
         let input;
         do {
             menuPrincipalView();
@@ -24,10 +24,10 @@ export default class MenuAppController {
             
             switch(input){
                 case 1:
-                    this.showMenuCadastroPaciente();
+                    await this.showMenuCadastroPaciente();
                     break;
                 case 2:
-                    this.showMenuAgenda();
+                    await this.showMenuAgenda();
                     break;
                 case 3: 
                     showEncerrandoPrograma();
@@ -39,20 +39,23 @@ export default class MenuAppController {
         } while (input != 3)
     }
 
-    showMenuCadastroPaciente(){
+    async showMenuCadastroPaciente(){
         let input;
         do {
             menuCadastroPacientes();
             input = this.leEntrada();
-            switch(input){
+            switch(input) {
                 case 1: 
-                    console.log("Cadastrar Novo Paciente");
+                    PacienteController.cadastrarPaciente();
+                    await this.#consultorioService.atualizarArquivoConsultorio();
                     break;
                 case 2: 
                     console.log("Excluir Paciente");
+
+                    this.#consultorioService.atualizarArquivoConsultorio();
                     break;
                 case 3:
-                    console.log("Listar Pacientes ordenado por CPF");
+                    PacienteController.listarPacientes();
                     break;
                 case 4: 
                     console.log("Listar Pacientes ordenado por nome")
@@ -68,7 +71,7 @@ export default class MenuAppController {
         } while (input != 5);
     }
 
-    showMenuAgenda(){
+    async showMenuAgenda(){
         let input;
 
         do {
@@ -78,9 +81,11 @@ export default class MenuAppController {
             switch(input){
                 case 1: 
                     console.log("Agendar Consulta");
+                    this.#consultorioService.atualizarArquivoConsultorio();
                     break;
                 case 2: 
                     console.log("Cancelar Agendamento");
+                    this.#consultorioService.atualizarArquivoConsultorio();
                     break;
                 case 3:
                     console.log("Listar Agenda");
