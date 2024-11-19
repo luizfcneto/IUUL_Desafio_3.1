@@ -1,5 +1,5 @@
 import PacienteService from "../services/PacienteService.js";
-import { listPacientes, showPacienteCadastradoComSucesso, showPacienteFalha } from "../views/PacienteView.js";
+import { listPacientes, showPacienteCadastradoComSucesso, showPacienteFalha, showPacienteRemovidoComSucesso } from "../views/PacienteView.js";
 
 class PacienteController {
     #pacienteService;
@@ -13,6 +13,15 @@ class PacienteController {
             this.#pacienteService.cadastrarPaciente();
             showPacienteCadastradoComSucesso();
         }catch(error){ 
+            showPacienteFalha(error.message);
+        }
+    }
+
+    excluirPaciente(){
+        try {
+            this.#pacienteService.excluirPaciente();
+            showPacienteRemovidoComSucesso();
+        }catch(error){
             showPacienteFalha(error.message);
         }
     }

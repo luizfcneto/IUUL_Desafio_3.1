@@ -7,16 +7,25 @@ export default class ConsultorioService{
     constructor(){}
 
     findPacienteByCPF(cpf){
-        const paciente = consultorio.findPacienteByCPF(cpf);
-        if(paciente.length !== 0){
-            throw new Error(messageError.PACIENTE_JA_CADASTRADO);
-        }
-        return paciente;
+        return consultorio.findPacienteByCPF(cpf);
     }
 
     addPaciente(pacienteNovo){
         consultorio.addNewPaciente(pacienteNovo);
         return true;
+    }
+
+    removePaciente(cpf){
+        const pacienteIndex = consultorio.pacientes.findIndex((paciente) => {
+            return paciente.cpf === cpf;
+        });
+
+        if(pacienteIndex === -1){
+            throw new Error("Erro: paciente nao encontrado");
+        }
+
+        const pacienteRemovido = consultorio.pacientes.splice(pacienteIndex, 1); 
+        return pacienteRemovido;
     }
 
     listPacientes(){

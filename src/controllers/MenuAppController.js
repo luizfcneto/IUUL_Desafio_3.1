@@ -50,9 +50,8 @@ export default class MenuAppController {
                     await this.#consultorioService.atualizarArquivoConsultorio();
                     break;
                 case 2: 
-                    console.log("Excluir Paciente");
-
-                    this.#consultorioService.atualizarArquivoConsultorio();
+                    PacienteController.excluirPaciente();
+                    await this.#consultorioService.atualizarArquivoConsultorio();
                     break;
                 case 3:
                     PacienteController.listarPacientes();
@@ -65,7 +64,6 @@ export default class MenuAppController {
                     return;
                 default:
                     showEntradaInvalida();
-                    input = this.leEntrada();
             }
 
         } while (input != 5);
@@ -95,7 +93,6 @@ export default class MenuAppController {
                     return;
                 default:
                     showEntradaInvalida();
-                    input = this.leEntrada();
             }
 
         } while(input != 4);

@@ -12,29 +12,32 @@ class PacienteService {
     }
 
     cadastrarPaciente(){
-        let cpf = this.leCPF();
+        let cpf = this.leEntrada("CPF: ");
         validateCPF(cpf);
 
         const pacienteJaExistente = this.#consultorioService.findPacienteByCPF(cpf);
-        let nome = this.leNome();
+        if(pacienteJaExistente.length !== 0){
+            throw new Error(messageError.PACIENTE_JA_CADASTRADO);
+        }
+
+        let nome = this.leEntrada("Nome: ");
         validateNome(nome);
 
-        let dataNascimento = this.leDataNascimento();
+        let dataNascimento = this.leEntrada("Data de Nascimento: ");
         validateDataNascimento(dataNascimento);
         const pacienteNovo = new Paciente(cpf, nome, dataNascimento);
         this.#consultorioService.addPaciente(pacienteNovo);
     }
 
-    leCPF(){
-        return prompt("CPF: ");
+    excluirPaciente(){
+        let cpf = this.leEntrada("CPF: ");
+        validateCPF(cpf);
+        const [pacienteExiste] = this.#consultorioService.findPacienteByCPF(cpf);
+        this.#consultorioService.removePaciente(pacienteExiste.cpf);
     }
 
-    leNome(){
-        return prompt("Nome: ");
-    }
-
-    leDataNascimento(){
-        return prompt("Data de Nascimento: ");
+    leEntrada(variavelEntrada){
+        return prompt(variavelEntrada);
     }
 
     listarPacientes(){
