@@ -1,3 +1,4 @@
+import { messageError } from "../Errors/constant.js";
 import Consulta from "./Consulta.js";
 import Paciente from "./Paciente.js";
 
@@ -30,7 +31,7 @@ export default class Consultorio {
         });
 
         if(pacienteIndex === -1){
-            throw new Error("Erro: paciente nao encontrado");
+            throw new Error(messageError.PACIENTE_NAO_CADASTRADO);
         }
 
         const pacienteRemovido = this.#pacientes.splice(pacienteIndex, 1); 
@@ -55,6 +56,19 @@ export default class Consultorio {
         });
         
         return jaPossuiConsulta;
+    }
+
+    removeConsultaDePaciente(cpf, dataComHorarioInicial){
+        const consultaIndex = this.#consultas.findIndex((consulta) => {
+            return consulta.paciente.cpf === cpf && consulta.horaInicial.getTime() == dataComHorarioInicial.getTime();
+        });
+
+        if(consultaIndex === -1){
+            throw new Error(messageError.CONSULTA_NAO_ENCONTRADA);
+        }
+
+        const consultaRemovida = this.#consultas.splice(consultaIndex, 1);
+        return consultaRemovida;
     }
 
     toString(){

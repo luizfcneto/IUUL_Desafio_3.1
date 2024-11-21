@@ -54,6 +54,25 @@ export default class ConsultaService {
         }
     }
 
+    cancelarConsulta(){
+        let cpf = this.leEntrada("CPF: ");
+        validateCPF(cpf);
+        
+        let pacienteCadastrado = this.#consultorioService.findPacienteByCPF(cpf);
+        if(pacienteCadastrado.length === 0){
+            throw new Error(messageError.PACIENTE_NAO_CADASTRADO);
+        }
+
+        let dataConsulta = this.leEntrada("Data da consulta: ");
+        validateDataConsulta(dataConsulta);
+        
+        let horaInicial = this.leEntrada("Hora inicial: ");
+        validateHorario(horaInicial);
+
+        const dateHorarioInicioConsulta = buildDate(dataConsulta, horaInicial);
+        this.#consultorioService.removeConsulta(cpf, dateHorarioInicioConsulta);
+    }
+
     leEntrada(variavelEntrada){
         return prompt(variavelEntrada);
     }

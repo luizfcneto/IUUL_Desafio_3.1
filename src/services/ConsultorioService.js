@@ -36,6 +36,10 @@ export default class ConsultorioService{
         return true;
     }
 
+    removeConsulta(cpf, dataComHorarioInicial){
+        consultorio.removeConsultaDePaciente(cpf, dataComHorarioInicial);
+    }
+
     async atualizarArquivoConsultorio(){
         try {
             await new ConsultorioRepository().atualizarConsultorio(consultorio);

@@ -83,8 +83,8 @@ export default class MenuAppController {
                     await this.#consultorioService.atualizarArquivoConsultorio();
                     break;
                 case 2: 
-                    console.log("Cancelar Agendamento");
-                    // await this.#consultorioService.atualizarArquivoConsultorio();
+                    ConsultaController.cancelarConsulta();
+                    await this.#consultorioService.atualizarArquivoConsultorio();
                     break;
                 case 3:
                     console.log("Listar Agenda");
