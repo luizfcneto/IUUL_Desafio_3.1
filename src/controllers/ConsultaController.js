@@ -1,5 +1,5 @@
 import ConsultaService from "../services/ConsultaService.js";
-import { showConsultaAgendadaComSucesso, showConsultaCanceladaComSucesso, showConsultaFalha } from "../views/ConsultaView.js";
+import { listAgenda, showConsultaAgendadaComSucesso, showConsultaCanceladaComSucesso, showConsultaFalha } from "../views/ConsultaView.js";
 
 class ConsultaController {
     #consultaService;
@@ -21,6 +21,15 @@ class ConsultaController {
         try {
             this.#consultaService.cancelarConsulta();
             showConsultaCanceladaComSucesso();
+        }catch(error){
+            showConsultaFalha(error.message);
+        }
+    }
+
+    listarAgenda(){
+        try {
+            const agenda = this.#consultaService.listarAgenda();
+            listAgenda(agenda);
         }catch(error){
             showConsultaFalha(error.message);
         }

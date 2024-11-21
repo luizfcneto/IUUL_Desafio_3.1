@@ -9,3 +9,17 @@ export const showConsultaCanceladaComSucesso = () => {
 export const showConsultaFalha = (errorMessage) => {
     console.log(errorMessage);
 }
+
+export const listAgenda = (agenda) => {
+    console.log(
+`--------------------------------------------------------------------------
+Data        H.ini   H.Fim   Tempo   Nome                      Dt. Nasc.
+--------------------------------------------------------------------------`
+    );
+    agenda.forEach((consulta) => {
+        console.log(consulta.toString());
+    });
+    console.log(
+`--------------------------------------------------------------------------`
+    );
+}

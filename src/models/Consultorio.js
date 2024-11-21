@@ -111,6 +111,18 @@ export default class Consultorio {
         return todosPacientesComAgendados;
     }
 
+    listaTodasConsultas(dataInicial = undefined, dataFinal = undefined){
+        if(dataInicial && dataFinal){
+            const consultasPorPeriodo = this.#consultas.filter(consulta => {
+                const data = new Date(consulta.data);
+                return dataInicial <= data && data <= dataFinal; 
+            });
+            return consultasPorPeriodo;
+        }else {
+            return this.consultas;
+        }
+    }
+
     toString(){
         return `Consultas: ${this.#consultas.toString()}\nListaPacientes: ${this.#pacientes.toString()}`;
     }

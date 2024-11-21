@@ -41,7 +41,7 @@ export default class Consulta {
     }
 
     toString(){
-        return `${buildDateStringFromDate(new Date(this.data))} ${buildHorarioStringFromDate(new Date(this.horaInicial))} ${buildHorarioStringFromDate(new Date(this.horaFinal))} ${this.tempo} ${this.paciente.nome} ${this.paciente.dataNascimento}`;
+        return `${buildDateStringFromDate(new Date(this.data)).padEnd(11)} ${buildHorarioStringFromDate(new Date(this.horaInicial)).padEnd(7)} ${buildHorarioStringFromDate(new Date(this.horaFinal)).padEnd(7)} ${this.tempo.padEnd(7)} ${this.paciente.nome.padEnd(25)} ${this.paciente.dataNascimento}`;
     }
 
     toShortString(){

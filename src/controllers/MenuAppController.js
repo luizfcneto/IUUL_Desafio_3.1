@@ -87,7 +87,7 @@ export default class MenuAppController {
                     await this.#consultorioService.atualizarArquivoConsultorio();
                     break;
                 case 3:
-                    console.log("Listar Agenda");
+                    ConsultaController.listarAgenda();
                     break;
                 case 4:
                     showVoltandoMenuPrincipal();

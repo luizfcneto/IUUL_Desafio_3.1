@@ -2,6 +2,9 @@ export const buildDate = (dateString, horarioString) => {
     const regexData = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/([1-9]\d{3})$/;
     const [_, dia, mes, ano] = dateString.match(regexData);
 
+    if(horarioString === null || horarioString === undefined){
+        horarioString = "0000";
+    }
     const hora = parseInt(horarioString.substring(0,2));
     const minutos = parseInt(horarioString.substring(2,4));
     const date = new Date(Date.UTC(ano, mes - 1, dia, hora, minutos));

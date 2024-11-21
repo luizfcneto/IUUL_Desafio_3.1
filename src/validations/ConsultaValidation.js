@@ -34,3 +34,24 @@ export const validateHorario = (horario) => {
         throw new Error(messageError.HORARIO_INDALIDO);
     }
 }
+
+export const validateEntradaListagemConsulta = (entrada) => {
+    if(entrada === null || entrada === undefined || entrada.length > 1){
+        throw new Error(messageError.APRESENTACAO_AGENDA_INVALIDO);
+    }
+
+    if(!/^[TP]$/.test(entrada)){
+        throw new Error(messageError.APRESENTACAO_AGENDA_INVALIDO);
+    }
+}
+
+export const validateData = (data) => {
+    if(data === null || data === undefined || data.length < 10){
+        throw new Error(messageError.DATA_CONSULTA_INVALIDA);
+    }
+
+    const regexData = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/([1-9]\d{3})$/;
+    if(!regexData.test(data)){
+        throw new Error(messageError.DATA_CONSULTA_INVALIDA);
+    }
+}

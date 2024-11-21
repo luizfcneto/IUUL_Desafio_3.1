@@ -43,6 +43,10 @@ export default class ConsultorioService{
         consultorio.removeConsultaDePacientePorCPFEData(cpf, dataComHorarioInicial);
     }
 
+    listAgenda(dataInicial = undefined, dataFinal = undefined){
+        return consultorio.listaTodasConsultas(dataInicial, dataFinal);
+    }
+
     async atualizarArquivoConsultorio(){
         try {
             await new ConsultorioRepository().atualizarConsultorio(consultorio);

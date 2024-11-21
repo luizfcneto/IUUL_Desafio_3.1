@@ -1,4 +1,4 @@
-import { validateDataConsulta, validateHorario } from "../validations/ConsultaValidation.js";
+import { validateData, validateDataConsulta, validateEntradaListagemConsulta, validateHorario } from "../validations/ConsultaValidation.js";
 import { validateCPF } from "../validations/PacienteValidation.js";
 import ConsultorioService from "./ConsultorioService.js";
 import { messageError } from "../Errors/constant.js";
@@ -71,6 +71,31 @@ export default class ConsultaService {
 
         const dateHorarioInicioConsulta = buildDate(dataConsulta, horaInicial);
         this.#consultorioService.removeConsulta(cpf, dateHorarioInicioConsulta);
+    }
+
+    listarAgenda(){
+        let tipoApresentacao = this.leEntrada("T-Toda ou P-Periodo: ");
+        validateEntradaListagemConsulta(tipoApresentacao);
+
+        if(tipoApresentacao === "T"){
+            const listaAgendaSemPeriodo = this.#consultorioService.listAgenda();
+            return listaAgendaSemPeriodo;
+        }else if(tipoApresentacao === "P"){
+            let dataInicial = this.leEntrada("Data inicial: ");
+            validateData(dataInicial);
+
+            let dataFinal = this.leEntrada("Data final: ");
+            validateData(dataFinal);
+
+            dataInicial = buildDate(dataInicial);
+            dataFinal = buildDate(dataFinal);
+
+            const listaAgendaComPeriodo = this.#consultorioService.listAgenda(dataInicial, dataFinal);
+            return listaAgendaComPeriodo;
+        }else {
+            throw new Error(messageError.APRESENTACAO_AGENDA_INVALIDO);
+        }
+
     }
 
     leEntrada(variavelEntrada){
