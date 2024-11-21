@@ -16,20 +16,24 @@ export default class ConsultorioService{
     }
 
     removePaciente(cpf){
-        const pacienteIndex = consultorio.pacientes.findIndex((paciente) => {
-            return paciente.cpf === cpf;
-        });
-
-        if(pacienteIndex === -1){
-            throw new Error("Erro: paciente nao encontrado");
-        }
-
-        const pacienteRemovido = consultorio.pacientes.splice(pacienteIndex, 1); 
-        return pacienteRemovido;
+        return consultorio.removePaciente(cpf);
     }
 
     listPacientes(){
         return consultorio.pacientes;
+    }
+
+    verificaDataConsultaDisponivel(dataComHorarioInicial, dataComHorarioFinal){
+        return consultorio.verificaDataConsultaDisponivel(dataComHorarioInicial, dataComHorarioFinal);
+    }
+
+    verificaConsultaFuturaPaciente(cpf){
+        return consultorio.verificaConsultaFuturaPaciente(cpf);
+    }
+
+    addConsulta(consultaNova){
+        consultorio.addNewConsulta(consultaNova);
+        return true;
     }
 
     async atualizarArquivoConsultorio(){

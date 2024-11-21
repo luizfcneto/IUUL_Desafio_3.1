@@ -2,6 +2,8 @@ import PromptSync from "prompt-sync";
 import { validateCPF, validateDataNascimento, validateNome } from "../validations/PacienteValidation.js";
 import ConsultorioService from "./ConsultorioService.js";
 import Paciente from "../models/Paciente.js";
+import { messageError } from "../Errors/constant.js";
+
 const prompt = new PromptSync({sigint: true});
 
 class PacienteService {

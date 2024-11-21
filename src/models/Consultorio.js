@@ -1,17 +1,17 @@
-import Agenda from "./Agenda.js";
+import Consulta from "./Consulta.js";
 import Paciente from "./Paciente.js";
 
 export default class Consultorio {
     #pacientes;
-    #agenda;
+    #consultas;
 
     constructor(consultorio){
         if(consultorio === null){
             this.#pacientes = [];
-            this.#agenda = new Agenda();
+            this.#consultas = [];
         }else {
             this.#pacientes = consultorio?.pacientes?.length > 0 ? consultorio.pacientes.map(paciente => Paciente.fromObject(paciente)) : [];
-            this.#agenda = consultorio?.agenda === null || consultorio?.agenda === undefined ? new Agenda() : consultorio.agenda;
+            this.#consultas = consultorio?.consultas?.length > 0 ? consultorio.consultas.map(consulta => Consulta.fromObject(consulta)) : [];
         }
     }
 
@@ -24,22 +24,55 @@ export default class Consultorio {
         return true;
     }
 
+    removePaciente(cpf){
+        const pacienteIndex = this.#pacientes.findIndex((paciente) => {
+            return paciente.cpf === cpf;
+        });
+
+        if(pacienteIndex === -1){
+            throw new Error("Erro: paciente nao encontrado");
+        }
+
+        const pacienteRemovido = this.#pacientes.splice(pacienteIndex, 1); 
+        return pacienteRemovido;
+    }
+
+    addNewConsulta(consulta){
+        this.#consultas.push(consulta);
+    }
+
+    verificaDataConsultaDisponivel(dataComHorarioInicial, dataComHorarioFinal){
+        const colisao =  this.#consultas.some((consulta) => {
+                return (dataComHorarioInicial >= consulta.horaInicial && dataComHorarioInicial < consulta.horaFinal) || (dataComHorarioFinal > consulta.horaInicial && dataComHorarioFinal <= consulta.horaFinal) || (dataComHorarioInicial <= consulta.horaInicial && dataComHorarioFinal >= consulta.horaFinal);
+            });
+        return !colisao;
+    }
+
+    verificaConsultaFuturaPaciente(cpf){
+        const dataCorrente = new Date();
+        const jaPossuiConsulta = this.#consultas.some((consulta) => {
+            return consulta.horaInicial > dataCorrente && consulta.paciente.cpf === cpf;
+        });
+        
+        return jaPossuiConsulta;
+    }
+
     toString(){
-        return `Agenda: ${this.#agenda.toString()}\nListaPacientes: ${this.#pacientes.toString()}`;
+        return `Consultas: ${this.#consultas.toString()}\nListaPacientes: ${this.#pacientes.toString()}`;
     }
 
     get pacientes(){
         return this.#pacientes;
     }
 
-    get agenda(){
-        return this.#agenda;
+    get consultas(){
+        return this.#consultas;
     }
 
     toJSON(){
         return {
-            pacientes: this.pacientes,
-            agenda: this.agenda
+            pacientes: this.pacientes.map(paciente => paciente.toJSON()),
+            consultas: this.consultas.map(consulta => consulta.toJSON())
         }
     }
 

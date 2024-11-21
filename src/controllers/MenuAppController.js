@@ -2,6 +2,7 @@ import promptSync from "prompt-sync";
 import { menuAgenda, menuCadastroPacientes, menuPrincipalView, showEncerrandoPrograma, showEntradaInvalida, showVoltandoMenuPrincipal } from "../views/MenuView.js";
 import PacienteController from "./PacienteController.js";
 import ConsultorioService from "../services/ConsultorioService.js";
+import ConsultaController from "./ConsultaController.js";
 
 const prompt = promptSync({sigint: true});
 
@@ -78,12 +79,12 @@ export default class MenuAppController {
 
             switch(input){
                 case 1: 
-                    console.log("Agendar Consulta");
-                    this.#consultorioService.atualizarArquivoConsultorio();
+                    ConsultaController.agendarConsulta();
+                    await this.#consultorioService.atualizarArquivoConsultorio();
                     break;
                 case 2: 
                     console.log("Cancelar Agendamento");
-                    this.#consultorioService.atualizarArquivoConsultorio();
+                    // await this.#consultorioService.atualizarArquivoConsultorio();
                     break;
                 case 3:
                     console.log("Listar Agenda");

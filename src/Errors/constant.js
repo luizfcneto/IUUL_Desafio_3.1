@@ -5,5 +5,10 @@ export const messageError = {
     PACIENTE_MENOR_13_ANOS: "Erro: paciente deve ter pelo menos 13 anos",
     PACIENTE_JA_CADASTRADO: "Erro: CPF já cadastrado",
     ERRO_ATUALIZAR_CONSULTORIO: "Erro: atualizar arquivo de consultorio.json",
-    ERRO_BUSCAR_CONSULTORIO: "Erro: buscar consultorio de arquivo .json"
+    ERRO_BUSCAR_CONSULTORIO: "Erro: buscar consultorio de arquivo consultorio.json",
+    PACIENTE_NAO_CADASTRADO: "Erro: paciente não cadastrado",
+    DATA_CONSULTA_INVALIDA: "Erro: Data da consulta invalida",
+    HORARIO_INDALIDO: "Erro: Horario da consulta invalida",
+    HORARIO_CONSULTA_INDISPONIVEL: "Erro: já existe uma consulta agendada nesse horário",
+    PACIENTE_JA_POSSUI_CONSULTA_FUTURA: "Erro: Paciente só pode realizar um agendamento futuro por vez."
 }
