@@ -50,7 +50,6 @@ export const validateDataNascimento = (dataNascimento) => {
 
     const regexData = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/([1-9]\d{3})$/;
     if (!regexData.test(dataNascimento)) {
-        console.log("Deu merda aqui");
         throw new Error(messageError.DATA_NASCIMENTO_INVALIDA);
     }
 
