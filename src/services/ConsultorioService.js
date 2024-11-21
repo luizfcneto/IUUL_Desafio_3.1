@@ -19,7 +19,7 @@ export default class ConsultorioService{
     }
 
     listPacientes(){
-        return consultorio.pacientes;
+        return consultorio.listaTodosPacientesComAgendados();
     }
 
     verificaDataConsultaDisponivel(dataComHorarioInicial, dataComHorarioFinal){

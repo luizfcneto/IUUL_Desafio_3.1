@@ -49,8 +49,14 @@ class PacienteService {
         return prompt(variavelEntrada);
     }
 
-    listarPacientes(){
-        return this.#consultorioService.listPacientes();
+    listarPacientes(orderBy = undefined){
+        if(orderBy === "CPF"){
+            let orderedByCPF = this.#consultorioService.listPacientes();
+            return orderedByCPF.sort((a, b) => a.paciente.cpf.localeCompare(b.paciente.cpf));
+        }else {
+            let orderedByNome = this.#consultorioService.listPacientes();
+            return orderedByNome.sort((a, b) => a.paciente.nome.localeCompare(b.paciente.nome));
+        }
     }
 
 }

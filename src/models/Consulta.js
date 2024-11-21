@@ -41,7 +41,12 @@ export default class Consulta {
     }
 
     toString(){
-        return `${buildDateStringFromDate(this.data)} ${buildHorarioStringFromDate(this.horaInicial)} ${buildHorarioStringFromDate(this.horaFinal)} ${this.tempo} ${this.paciente.nome} ${this.paciente.dataNascimento}`;
+        return `${buildDateStringFromDate(new Date(this.data))} ${buildHorarioStringFromDate(new Date(this.horaInicial))} ${buildHorarioStringFromDate(new Date(this.horaFinal))} ${this.tempo} ${this.paciente.nome} ${this.paciente.dataNascimento}`;
+    }
+
+    toShortString(){
+        return `                Agendado para: ${buildDateStringFromDate(new Date(this.data))} 
+                ${buildHorarioStringFromDate(new Date(this.horaInicial))} às ${buildHorarioStringFromDate(new Date(this.horaFinal))}`
     }
 
     toJSON(){

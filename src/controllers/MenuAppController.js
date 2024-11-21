@@ -55,10 +55,10 @@ export default class MenuAppController {
                     await this.#consultorioService.atualizarArquivoConsultorio();
                     break;
                 case 3:
-                    PacienteController.listarPacientes();
+                    PacienteController.listarPacientes("CPF");
                     break;
                 case 4: 
-                    console.log("Listar Pacientes ordenado por nome")
+                    PacienteController.listarPacientes("nome");
                     break;
                 case 5:
                     showVoltandoMenuPrincipal();

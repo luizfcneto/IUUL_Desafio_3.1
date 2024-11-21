@@ -88,6 +88,29 @@ export default class Consultorio {
         return consultaRemovida;
     }
 
+    listaTodosPacientesComAgendados(){
+        const dataCorrente = new Date();
+        const pacientesAgendados = this.#consultas.filter(consulta => {
+            return consulta.horaInicial > dataCorrente;
+        });
+
+        let todosPacientesComAgendados = this.#pacientes.map(paciente => {
+            const [consultaAgendada] = pacientesAgendados.filter(consulta => consulta.paciente.cpf === paciente.cpf);
+            if(consultaAgendada !== 0){
+                return {
+                    paciente,
+                    consulta: consultaAgendada
+                }
+            }else {
+                return {
+                    paciente
+                }
+            }
+        });
+
+        return todosPacientesComAgendados;
+    }
+
     toString(){
         return `Consultas: ${this.#consultas.toString()}\nListaPacientes: ${this.#pacientes.toString()}`;
     }

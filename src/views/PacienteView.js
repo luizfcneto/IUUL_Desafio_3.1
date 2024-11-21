@@ -10,14 +10,18 @@ export const showPacienteRemovidoComSucesso = () => {
     console.log("Paciente excluído com sucesso!");
 }
 
-export const listPacientes = (pacientes) => {
+export const listPacientes = (pacientesComAgendados) => {
     console.log(
 `--------------------------------------------------------------------------
 CPF             Nome                                Dt.Nasc.        Idade
 --------------------------------------------------------------------------`
     );
-    pacientes.forEach((paciente) => {
-        console.log(paciente.toString());
+    pacientesComAgendados.forEach((elemento) => {
+        console.log(elemento.paciente.toString());
+        if(elemento.consulta){
+            console.log(elemento.consulta.toShortString());
+        }
+        
     });
     console.log(
 `--------------------------------------------------------------------------`

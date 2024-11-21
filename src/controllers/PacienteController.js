@@ -26,9 +26,9 @@ class PacienteController {
         }
     }
 
-    listarPacientes(){
-        const pacientes = this.#pacienteService.listarPacientes();
-        listPacientes(pacientes);
+    listarPacientes(orderBy = undefined){
+        const pacientesEComConsultasAgendadas = this.#pacienteService.listarPacientes(orderBy);
+        listPacientes(pacientesEComConsultasAgendadas);
     }
 
 }
