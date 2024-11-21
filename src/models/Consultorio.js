@@ -58,7 +58,8 @@ export default class Consultorio {
         return jaPossuiConsulta;
     }
 
-    removeConsultaDePaciente(cpf, dataComHorarioInicial){
+    removeConsultaDePacientePorCPFEData(cpf, dataComHorarioInicial){
+        console.log("Remover consulta de paciente: ", cpf, dataComHorarioInicial);
         const consultaIndex = this.#consultas.findIndex((consulta) => {
             return consulta.paciente.cpf === cpf && consulta.horaInicial.getTime() == dataComHorarioInicial.getTime();
         });
@@ -67,6 +68,22 @@ export default class Consultorio {
             throw new Error(messageError.CONSULTA_NAO_ENCONTRADA);
         }
 
+        const consultaRemovida = this.#consultas.splice(consultaIndex, 1);
+        return consultaRemovida;
+    }
+
+    removeConsultasPassadasDoPaciente(cpf){
+        const dataCorrente = new Date();
+        const consultaIndex = this.#consultas.map((consulta, index) => {
+            if(consulta.horaFinal < dataCorrente && consulta.paciente.cpf === cpf){
+                return index;   
+            }
+        });
+        consultaIndex.sort((a, b) => b - a);
+        consultaIndex.forEach(index => this.removeConsultaDePaciente(index)); 
+    }
+
+    removeConsultaDePaciente(consultaIndex){
         const consultaRemovida = this.#consultas.splice(consultaIndex, 1);
         return consultaRemovida;
     }

@@ -35,6 +35,13 @@ class PacienteService {
         let cpf = this.leEntrada("CPF: ");
         validateCPF(cpf);
         const [pacienteExiste] = this.#consultorioService.findPacienteByCPF(cpf);
+
+        const pacienteComConsultaFutura = this.#consultorioService.verificaConsultaFuturaPaciente(cpf);
+        if(pacienteComConsultaFutura){
+            throw new Error(messageError.PACIENTE_AGENDADO);
+        }
+
+        this.#consultorioService.removeConsultasPassadasPaciente(pacienteExiste.cpf);
         this.#consultorioService.removePaciente(pacienteExiste.cpf);
     }
 

@@ -11,5 +11,6 @@ export const messageError = {
     HORARIO_INDALIDO: "Erro: Horario da consulta invalida",
     HORARIO_CONSULTA_INDISPONIVEL: "Erro: já existe uma consulta agendada nesse horário",
     PACIENTE_JA_POSSUI_CONSULTA_FUTURA: "Erro: Paciente só pode realizar um agendamento futuro por vez.",
-    CONSULTA_NAO_ENCONTRADA: "Erro: agendamento não encontrado"
+    CONSULTA_NAO_ENCONTRADA: "Erro: agendamento não encontrado",
+    PACIENTE_AGENDADO: "Erro: paciente está agendado."
 }

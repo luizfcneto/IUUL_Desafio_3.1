@@ -1,4 +1,3 @@
-import { messageError } from "../Errors/constant.js";
 import { consultorio } from "../index.js";
 import ConsultorioRepository from "../repositories/ConsultorioRepository.js";
 import { showConsultorioError } from "../views/ConsultorioView.js";
@@ -31,13 +30,17 @@ export default class ConsultorioService{
         return consultorio.verificaConsultaFuturaPaciente(cpf);
     }
 
+    removeConsultasPassadasPaciente(cpf){
+        return consultorio.removeConsultasPassadasDoPaciente(cpf);
+    }
+
     addConsulta(consultaNova){
         consultorio.addNewConsulta(consultaNova);
         return true;
     }
 
     removeConsulta(cpf, dataComHorarioInicial){
-        consultorio.removeConsultaDePaciente(cpf, dataComHorarioInicial);
+        consultorio.removeConsultaDePacientePorCPFEData(cpf, dataComHorarioInicial);
     }
 
     async atualizarArquivoConsultorio(){
