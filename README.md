@@ -5,6 +5,10 @@
 ## Minimundo
 O sistema será uma aplicação console desenvolvida em JavaScript para gerenciar a agenda de um consultório odontológico. A aplicação permitirá o cadastro de pacientes, o agendamento e cancelamento de consultas, e a listagem de pacientes e da agenda. As funcionalidades e regras de negócio estão detalhadas abaixo, junto com os layouts de interface definidos para exibição dos dados.
 
+
+**Modelo de Domínio da Aplicação:**
+
+![alt text](docs/imgs/modelo-dominio.png)
 ---
 
 ## Funcionalidades
@@ -20,6 +24,10 @@ O sistema será uma aplicação console desenvolvida em JavaScript para gerencia
     - Dados inválidos exibem uma mensagem de erro, e a aplicação solicita o dado novamente.
     - Não é permitido o cadastro de dois pacientes com o mesmo CPF.
     - O paciente deve ter 13 anos ou mais no momento do cadastro (data atual).
+
+**Solução esboçada:**
+
+![alt text](docs/imgs/diagrama-sequencia-cadastrar-pacientes.png)
 
 ### 2. Exclusão de Pacientes do Cadastro
 - **Descrição:** Remove um paciente do cadastro.
