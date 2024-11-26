@@ -1,25 +1,27 @@
-import ConsultaService from "../services/ConsultaService.js";
+import ConsultorioService from "../services/ConsultorioService.js";
 import { listAgenda, showConsultaAgendadaComSucesso, showConsultaCanceladaComSucesso, showConsultaFalha } from "../views/ConsultaView.js";
 
 class ConsultaController {
-    #consultaService;
+    #consultorioService;
 
     constructor(){
-        this.#consultaService = new ConsultaService();
+        this.#consultorioService = new ConsultorioService();
     }
 
-    agendarConsulta(){
+    async agendarConsulta(){
         try {
-            this.#consultaService.agendarConsulta();
+            this.#consultorioService.agendarConsulta();
+            await this.#consultorioService.atualizarArquivoConsultorio();
             showConsultaAgendadaComSucesso();
         }catch(error){
             showConsultaFalha(error.message);
         }
     }
 
-    cancelarConsulta(){
+    async cancelarConsulta(){
         try {
-            this.#consultaService.cancelarConsulta();
+            this.#consultorioService.cancelarConsulta();
+            await this.#consultorioService.atualizarArquivoConsultorio();
             showConsultaCanceladaComSucesso();
         }catch(error){
             showConsultaFalha(error.message);
@@ -28,7 +30,7 @@ class ConsultaController {
 
     listarAgenda(){
         try {
-            const agenda = this.#consultaService.listarAgenda();
+            const agenda = this.#consultorioService.listarAgenda();
             listAgenda(agenda);
         }catch(error){
             showConsultaFalha(error.message);

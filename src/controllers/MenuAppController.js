@@ -47,12 +47,10 @@ export default class MenuAppController {
             input = this.leEntrada();
             switch(input) {
                 case 1: 
-                    PacienteController.cadastrarPaciente();
-                    await this.#consultorioService.atualizarArquivoConsultorio();
+                    await PacienteController.cadastrarPaciente();
                     break;
                 case 2: 
-                    PacienteController.excluirPaciente();
-                    await this.#consultorioService.atualizarArquivoConsultorio();
+                    await PacienteController.excluirPaciente();
                     break;
                 case 3:
                     PacienteController.listarPacientes("CPF");
@@ -79,12 +77,10 @@ export default class MenuAppController {
 
             switch(input){
                 case 1: 
-                    ConsultaController.agendarConsulta();
-                    await this.#consultorioService.atualizarArquivoConsultorio();
+                    await ConsultaController.agendarConsulta();
                     break;
                 case 2: 
-                    ConsultaController.cancelarConsulta();
-                    await this.#consultorioService.atualizarArquivoConsultorio();
+                    await ConsultaController.cancelarConsulta();
                     break;
                 case 3:
                     ConsultaController.listarAgenda();

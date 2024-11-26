@@ -1,25 +1,27 @@
-import PacienteService from "../services/PacienteService.js";
+import ConsultorioService from "../services/ConsultorioService.js";
 import { listPacientes, showPacienteCadastradoComSucesso, showPacienteFalha, showPacienteRemovidoComSucesso } from "../views/PacienteView.js";
 
 class PacienteController {
-    #pacienteService;
+    #consultorioService;
 
     constructor(){
-        this.#pacienteService = new PacienteService();
+        this.#consultorioService = new ConsultorioService();
     }
 
-    cadastrarPaciente(){
+    async cadastrarPaciente(){
         try {
-            this.#pacienteService.cadastrarPaciente();
+            this.#consultorioService.cadastrarPaciente();
+            await this.#consultorioService.atualizarArquivoConsultorio();
             showPacienteCadastradoComSucesso();
         }catch(error){ 
             showPacienteFalha(error.message);
         }
     }
 
-    excluirPaciente(){
+    async excluirPaciente(){
         try {
-            this.#pacienteService.excluirPaciente();
+            this.#consultorioService.excluirPaciente();
+            await this.#consultorioService.atualizarArquivoConsultorio();  
             showPacienteRemovidoComSucesso();
         }catch(error){
             showPacienteFalha(error.message);
@@ -27,7 +29,7 @@ class PacienteController {
     }
 
     listarPacientes(orderBy = undefined){
-        const pacientesEComConsultasAgendadas = this.#pacienteService.listarPacientes(orderBy);
+        const pacientesEComConsultasAgendadas = this.#consultorioService.listarPacientes(orderBy);
         listPacientes(pacientesEComConsultasAgendadas);
     }
 
