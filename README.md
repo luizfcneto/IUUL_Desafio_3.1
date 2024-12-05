@@ -1,9 +1,15 @@
-# IUUL_Desafio_1.2
+# IUUL_Desafio_3.1
 
 # Documentação - Sistema de Agenda para Consultório Odontológico
 
 ## Minimundo
 O sistema será uma aplicação console desenvolvida em JavaScript para gerenciar a agenda de um consultório odontológico. A aplicação permitirá o cadastro de pacientes, o agendamento e cancelamento de consultas, e a listagem de pacientes e da agenda. As funcionalidades e regras de negócio estão detalhadas abaixo, junto com os layouts de interface definidos para exibição dos dados.
+
+## Desafio 3.1:
+Implementar a persistência dos dados na aplicação desenvolvida no Desafio #1.2. A persistência
+deverá ser implementada, obrigatoriamente, usando o Sequelize. O projeto do Desafio #1.2 pode
+ser refatorado se você entender que é necessário ou importante aprimorar a estrutura da solução
+adotada naquele projeto.
 
 
 **Modelo de Domínio da Aplicação:**
