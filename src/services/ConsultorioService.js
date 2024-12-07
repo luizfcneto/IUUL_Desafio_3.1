@@ -1,5 +1,5 @@
 import { messageError } from "../Errors/constant.js";
-import { consultorio } from "../index.js";
+// import { consultorio } from "../index.js";
 import Consulta from "../models/Consulta.js";
 import Paciente from "../models/Paciente.js";
 import ConsultorioRepository from "../repositories/ConsultorioRepository.js";

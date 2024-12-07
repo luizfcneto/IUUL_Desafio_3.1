@@ -1,15 +1,12 @@
 import MenuAppController from "./controllers/MenuAppController.js";
-import Consultorio from "./models/Consultorio.js";
-import ConsultorioService from "./services/ConsultorioService.js";
-import { showConsultorioError } from "./views/ConsultorioView.js";
+import sequelize from "./config/sequelizeConfig.js";
 
-console.log("Sistema de Agenda para Consultório Odontológico");
-const consultorioService = new ConsultorioService();
-let consultorioFromFile = null;
 try {
-    consultorioFromFile = await consultorioService.getConsultorioFromFile();
+    await sequelize.authenticate();
+    console.log("Conexão com banco de dados estabelecida com sucesso");
+    console.log("Sistema de Agenda para Consultório Odontológico");
+    await new MenuAppController().init();
 }catch(error){
-    showConsultorioError(error.message);
+    console.log(error.name, error.message);
+    console.log("Não foi possível estabelecer conexão com banco de dados");
 }
-export let consultorio = new Consultorio(consultorioFromFile);
-await new MenuAppController(consultorioService).init();

@@ -2,7 +2,7 @@ import fs from "fs/promises";
 import path from "path";
 import { messageError } from "../Errors/constant.js";
 import { fileURLToPath } from "url";
-import { consultorio } from "../index.js";
+// import { consultorio } from "../index.js";
 
 export default class ConsultorioRepository {
     #consultorioPath;
