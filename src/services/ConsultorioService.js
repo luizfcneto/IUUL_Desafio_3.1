@@ -1,4 +1,4 @@
-import { messageError } from "../Errors/constant.js";
+import { messageError } from "../errors/constant.js";
 // import { consultorio } from "../index.js";
 import Consulta from "../models/Consulta.js";
 import Paciente from "../models/Paciente.js";

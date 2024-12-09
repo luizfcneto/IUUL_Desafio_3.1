@@ -1,63 +1,33 @@
-export default class Paciente {
-    #cpf;
-    #nome;
-    #dataNascimento;
-    #idade;
+import { DataTypes, Model } from "sequelize";
+import sequelize from "../config/sequelizeConfig.js";
 
-    constructor(cpf, nome, dataNascimento, idade = undefined){
-        this.#cpf = cpf;
-        this.#nome = nome;
-        this.#dataNascimento = dataNascimento;
-        this.#idade = idade === undefined ? this.#setIdade() : parseInt(idade);
+class Paciente extends Model {};
+
+Paciente.init({
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        allowNull: false,
+        autoIncrement: true,
+        unique: true
+    },
+    cpf: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true
+    },
+    nome: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    dataNascimento: {
+        type: DataTypes.DATEONLY,
+        allowNull: false
     }
+}, {
+    sequelize: sequelize,
+    tableName: "Paciente",
+    timestamps: false
+});
 
-    #setIdade(){
-        const [dia, mes, ano] = this.dataNascimento.split('/');
-        const dataCorrente = new Date();
-        const dateNascimento = new Date(ano, mes - 1, dia);
-
-        let idade = dataCorrente.getFullYear() - dateNascimento.getFullYear();
-        const mesAtual = dataCorrente.getMonth();
-        const diaAtual = dataCorrente.getDate();
-
-        if(mesAtual < dateNascimento.getMonth() || (mesAtual === dateNascimento.getMonth() && diaAtual < dateNascimento.getDate())){
-            idade--;
-        }
-
-        return idade;
-    }
-
-    get cpf(){
-        return this.#cpf;
-    }
-
-    get nome(){
-        return this.#nome;
-    }
-
-    get dataNascimento(){
-        return this.#dataNascimento;
-    }
-
-    get idade(){
-        return this.#idade;
-    }
-
-    toString(){
-        return `${this.cpf.padEnd(15)} ${this.nome.padEnd(35)} ${this.dataNascimento.padEnd(15)} ${this.idade}`;
-    }
-
-    toJSON(){
-        return {
-            cpf: this.cpf,
-            nome: this.nome,
-            dataNascimento: this.dataNascimento,
-            idade: this.idade
-        }
-    }
-
-    static fromObject(obj){
-        return new Paciente(obj.cpf, obj.nome, obj.dataNascimento, obj.idade);
-    }
-
-}
+export default Paciente;

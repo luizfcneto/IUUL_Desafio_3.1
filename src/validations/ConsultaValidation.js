@@ -1,4 +1,4 @@
-import { messageError } from "../Errors/constant.js";
+import { messageError } from "../errors/constant.js";
 
 export const validateDataConsulta = (dataConsulta) => {
     if(dataConsulta === null || dataConsulta === undefined || dataConsulta.length < 10){

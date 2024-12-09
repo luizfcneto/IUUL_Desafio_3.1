@@ -1,6 +1,6 @@
 import fs from "fs/promises";
 import path from "path";
-import { messageError } from "../Errors/constant.js";
+import { messageError } from "../errors/constant.js";
 import { fileURLToPath } from "url";
 // import { consultorio } from "../index.js";
 

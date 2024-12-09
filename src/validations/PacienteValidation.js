@@ -1,4 +1,4 @@
-import { messageError } from "../Errors/constant.js";
+import { messageError } from "../errors/constant.js";
 
 export const validateCPF = (cpf) => {
     if(cpf.length !== 11){
