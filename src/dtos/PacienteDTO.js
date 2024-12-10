@@ -1,26 +1,28 @@
+import { buildDateStringFromDate } from "../utils/dateUtils.js";
+import ConsultaDTO from "./ConsultaDTO.js";
+
 export default class PacienteDTO {
     #cpf;
     #nome;
     #dataNascimento;
     #idade;
+    #consultas;
 
-    constructor(cpf, nome, dataNascimento, idade = undefined) {
+    constructor(cpf, nome, dataNascimento, idade = undefined, consultas = undefined) {
         this.#cpf = cpf;
         this.#nome = nome;
         this.#dataNascimento = dataNascimento,
         this.#idade = idade ? idade : this.calculaIdade();
+        this.#consultas = consultas;
     }
 
     calculaIdade(){
-        const [dia, mes, ano] = this.dataNascimento.split('/');
         const dataCorrente = new Date();
-        const dateNascimento = new Date(ano, mes - 1, dia);
-
-        let idade = dataCorrente.getFullYear() - dateNascimento.getFullYear();
+        let idade = dataCorrente.getFullYear() - this.dataNascimento.getFullYear();
         const mesAtual = dataCorrente.getMonth();
         const diaAtual = dataCorrente.getDate();
 
-        if(mesAtual < dateNascimento.getMonth() || (mesAtual === dateNascimento.getMonth() && diaAtual < dateNascimento.getDate())){
+        if(mesAtual < this.dataNascimento.getMonth() || (mesAtual === this.dataNascimento.getMonth() && diaAtual < this.dataNascimento.getDate())){
             idade--;
         }
 
@@ -43,16 +45,21 @@ export default class PacienteDTO {
         return this.#idade;
     }
 
+    get consultas(){
+        return this.#consultas;
+    }
+
     toString(){
-        return `${this.cpf.padEnd(15)} ${this.nome.padEnd(35)} ${this.dataNascimento.padEnd(15)} ${this.idade}`;
+        return `${this.cpf.padEnd(15)} ${this.nome.padEnd(35)} ${buildDateStringFromDate(this.dataNascimento).padEnd(15)} ${this.idade}`;
     }
 
     toJSON(){
         return {
             cpf: this.cpf,
             nome: this.nome,
-            dataNascimento: this.dataNascimento,
-            idade: this.idade
+            dataNascimento: buildDateStringFromDate(this.dataNascimento),
+            idade: this.idade,
+            consultas: this.consultas
         }
     }
 
@@ -61,6 +68,15 @@ export default class PacienteDTO {
     }
 
     static fromEntity(entity){
-        return new PacienteDTO(entity.cpf, entity.nome, entity.dataNascimento);
+        return new PacienteDTO(
+            entity.cpf, 
+            entity.nome, 
+            new Date(entity.dataNascimento), 
+            null, 
+            entity.consultas ? ConsultaDTO.fromEntities(entity.consultas) : null);
+    }
+
+    static fromEntities(entities){  
+        return entities.map(entity => PacienteDTO.fromEntity(entity));
     }
 }

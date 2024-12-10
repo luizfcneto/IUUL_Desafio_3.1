@@ -10,8 +10,7 @@ class PacienteController {
 
     async cadastrarPaciente(){
         try {
-            this.#consultorioService.cadastrarPaciente();
-            await this.#consultorioService.atualizarArquivoConsultorio();
+            await this.#consultorioService.cadastrarPaciente();
             showPacienteCadastradoComSucesso();
         }catch(error){ 
             showPacienteFalha(error.message);
@@ -20,16 +19,15 @@ class PacienteController {
 
     async excluirPaciente(){
         try {
-            this.#consultorioService.excluirPaciente();
-            await this.#consultorioService.atualizarArquivoConsultorio();  
+            await this.#consultorioService.excluirPaciente();
             showPacienteRemovidoComSucesso();
         }catch(error){
             showPacienteFalha(error.message);
         }
     }
 
-    listarPacientes(orderBy = undefined){
-        const pacientesEComConsultasAgendadas = this.#consultorioService.listarPacientes(orderBy);
+    async listarPacientes(orderBy = undefined){
+        const pacientesEComConsultasAgendadas = await this.#consultorioService.listarPacientes(orderBy);
         listPacientes(pacientesEComConsultasAgendadas);
     }
 

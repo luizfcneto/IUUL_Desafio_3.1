@@ -22,7 +22,8 @@ Paciente.init({
     },
     dataNascimento: {
         type: DataTypes.DATEONLY,
-        allowNull: false
+        timezone: "-03:00",
+        allowNull: false,
     }
 }, {
     sequelize: sequelize,

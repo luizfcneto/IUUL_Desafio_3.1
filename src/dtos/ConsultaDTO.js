@@ -66,4 +66,8 @@ export default class ConsultaDTO {
     static fromEntity(entity){
         return new ConsultaDTO(entity.data, entity.horaInicial, entity.horaFinal, PacienteDTO.fromEntity(entity.paciente));
     }
+
+    static fromEntities(entities) {
+        return entities.map(entity => ConsultaDTO.fromEntity(entity));
+    }
 }

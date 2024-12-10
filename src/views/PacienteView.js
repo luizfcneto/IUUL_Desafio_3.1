@@ -16,10 +16,10 @@ export const listPacientes = (pacientesComAgendados) => {
 CPF             Nome                                Dt.Nasc.        Idade
 --------------------------------------------------------------------------`
     );
-    pacientesComAgendados.forEach((elemento) => {
-        console.log(elemento.paciente.toString());
-        if(elemento.consulta){
-            console.log(elemento.consulta.toShortString());
+    pacientesComAgendados.forEach((paciente) => {
+        console.log(paciente.toString());
+        if(paciente.consulta){
+            console.log(paciente.consulta.toShortString());
         }
         
     });

@@ -12,14 +12,17 @@ Consulta.init({
     data: {
         type: DataTypes.DATEONLY,
         allowNull: false,
+        timezone: "-03:00",
     },
     horaInicial: {
         type: DataTypes.TIME,
         allowNull: false,
+        timezone: "-03:00",
     },
     horaFinal: {
         type: DataTypes.TIME,
         allowNull: false,
+        timezone: "-03:00",
     },
     tempo: {
         type: DataTypes.SMALLINT,

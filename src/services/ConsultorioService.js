@@ -1,8 +1,10 @@
+import PacienteDTO from "../dtos/PacienteDTO.js";
 import { messageError } from "../errors/constant.js";
 // import { consultorio } from "../index.js";
 import Consulta from "../models/Consulta.js";
 import Paciente from "../models/Paciente.js";
 import ConsultorioRepository from "../repositories/ConsultorioRepository.js";
+import PacienteRepository from "../repositories/PacienteRepository.js";
 import { buildDate } from "../utils/dateUtils.js";
 import { validateData, validateDataConsulta, validateEntradaListagemConsulta, validateHorario } from "../validations/ConsultaValidation.js";
 import { validateCPF, validateDataNascimento, validateNome } from "../validations/PacienteValidation.js";
@@ -13,19 +15,18 @@ const prompt = new PromptSync({sigint: true});
 
 export default class ConsultorioService{
     #consultorioRepository;
+    #pacienteRepository
 
-    constructor(consultorioRepository){
-        if(!consultorioRepository){
-            this.#consultorioRepository = new ConsultorioRepository();
-        }
+    constructor(pacienteRepository = undefined){
+        this.#pacienteRepository = new PacienteRepository();
     }
 
-    cadastrarPaciente(){
+    async cadastrarPaciente(){
         let cpf = this.leEntrada("CPF: ");
         validateCPF(cpf);
 
-        const pacienteJaExistente = this.#consultorioRepository.buscarPacientePorCPF(cpf);
-        if(pacienteJaExistente.length !== 0){
+        const pacienteJaExistente = await this.#pacienteRepository.getPacienteByCPF(cpf);
+        if(pacienteJaExistente){
             throw new Error(messageError.PACIENTE_JA_CADASTRADO);
         }
 
@@ -34,32 +35,28 @@ export default class ConsultorioService{
 
         let dataNascimento = this.leEntrada("Data de Nascimento: ");
         validateDataNascimento(dataNascimento);
-        const pacienteNovo = new Paciente(cpf, nome, dataNascimento);
-        this.#consultorioRepository.addPaciente(pacienteNovo);
+        dataNascimento = buildDate(dataNascimento);
+        const pacienteNovo = new PacienteDTO(cpf, nome, dataNascimento);
+        await this.#pacienteRepository.addPaciente(pacienteNovo);
     }
 
-    excluirPaciente(){
+    async excluirPaciente(){
         let cpf = this.leEntrada("CPF: ");
         validateCPF(cpf);
-        const [pacienteExiste] = this.#consultorioRepository.buscarPacientePorCPF(cpf);
+        const pacienteEntity = await this.#pacienteRepository.getPacienteByCPF(cpf);
 
-        const pacienteComConsultaFutura = this.#consultorioRepository.verificaConsultaFuturaPaciente(cpf);
-        if(pacienteComConsultaFutura){
-            throw new Error(messageError.PACIENTE_AGENDADO);
-        }
+        // const pacienteComConsultaFutura = this.#consultorioRepository.verificaConsultaFuturaPaciente(cpf);
+        // if(pacienteComConsultaFutura){
+        //     throw new Error(messageError.PACIENTE_AGENDADO);
+        // }
 
-        this.#consultorioRepository.removeConsultasPassadasDoPaciente(pacienteExiste.cpf);
-        this.#consultorioRepository.removerPaciente(pacienteExiste.cpf);
+        // this.#consultorioRepository.removeConsultasPassadasDoPaciente(pacienteExiste.cpf);
+        await this.#pacienteRepository.removePaciente(pacienteEntity.cpf);
     }
 
-    listarPacientes(orderBy = undefined){
-        if(orderBy === "CPF"){
-            let orderedByCPF = consultorio.listaTodosPacientesComAgendados();
-            return orderedByCPF.sort((a, b) => a.paciente.cpf.localeCompare(b.paciente.cpf));
-        }else {
-            let orderedByNome = consultorio.listaTodosPacientesComAgendados();
-            return orderedByNome.sort((a, b) => a.paciente.nome.localeCompare(b.paciente.nome));
-        }
+    async listarPacientes(orderBy = undefined){
+        const pacientesEntity = await this.#pacienteRepository.getAllPacientesOrderBy(orderBy); 
+        return PacienteDTO.fromEntities(pacientesEntity);
     }
 
     agendarConsulta(){
