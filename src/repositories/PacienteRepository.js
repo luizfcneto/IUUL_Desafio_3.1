@@ -1,7 +1,7 @@
-import { QueryTypes } from "sequelize";
-import sequelize from "../config/sequelizeConfig.js";
+import { Op, QueryTypes } from "sequelize";
 import { messageError } from "../errors/constant.js";
 import Paciente from "../models/Paciente.js";
+import Consulta from "../models/Consulta.js";
 
 export default class PacienteRepository {
 
@@ -22,20 +22,24 @@ export default class PacienteRepository {
 
     async getAllPacientesOrderBy(orderProp){
         try {
-            // return await Paciente.findAll({
-            //     order: [ [orderProp, "ASC"] ]
-            // });
-            return await sequelize.query(
-                `SELECT p.id, p.nome, p.cpf, p."dataNascimento", c.data, c."horaInicial", c."horaFinal", c."pacienteId" 
-                    FROM "Paciente" p 
-                    LEFT OUTER JOIN "Consulta" c ON p.id = c."pacienteId"
-                        WHERE c."data" ISNULL OR c."data" > :dataCorrente
-                        ORDER BY ${orderProp} ASC;`,
-                {
-                    replacements: { dataCorrente: new Date() },
-                    type: QueryTypes.SELECT
-                }
-            );
+            const pacientes = await Paciente.findAll({
+                include: [
+                    {
+                        model: Consulta,
+                        as: 'consultas',
+                        where: {
+                            data: {
+                                [Op.or]: [null, { [Op.gt]: new Date() }]
+                            }
+                        },
+                        required: false
+                    }
+                ],
+                order: [[orderProp, 'ASC']]
+            });
+
+            return pacientes;
+
         }catch(error){
             console.log(error.name, error.message);
             throw new Error(messageError.BANCO_DE_DADOS_ERRRO_CONSULTA_LISTA_PACIENTE);

@@ -53,10 +53,10 @@ export default class MenuAppController {
                     await PacienteController.excluirPaciente();
                     break;
                 case 3:
-                    await PacienteController.listarPacientes("p.cpf");
+                    await PacienteController.listarPacientes("cpf");
                     break;
                 case 4: 
-                    await PacienteController.listarPacientes("p.nome");
+                    await PacienteController.listarPacientes("nome");
                     break;
                 case 5:
                     showVoltandoMenuPrincipal();

@@ -55,12 +55,11 @@ export default class ConsultorioService{
     }
 
     async listarPacientes(orderBy = undefined){
-        const allowedColumns = ['p.nome', 'p.cpf'];
+        const allowedColumns = ['nome', 'cpf'];
         if (!allowedColumns.includes(orderBy)) {
             throw new Error("Erro: Coluna de ordenação inválida");
         }
         const pacientesEntity = await this.#pacienteRepository.getAllPacientesOrderBy(orderBy); 
-        console.log(pacientesEntity);
         return PacienteDTO.fromEntities(pacientesEntity);
     }
 

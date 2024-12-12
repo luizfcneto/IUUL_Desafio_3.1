@@ -32,7 +32,7 @@ export default class ConsultaRepository {
                  FROM "Consulta" c
                     WHERE c."data" = :data
                         AND :horaInicial < c."horaFinal"
-                        AND :horaFinal > c."horaInicial;"`
+                        AND :horaFinal > c."horaInicial";`
                 ,
                 {
                     replacements: {data, horaInicial, horaFinal} 
@@ -78,7 +78,6 @@ export default class ConsultaRepository {
                 pacienteId: consulta.paciente
             });
 
-            console.log(consultaCriada);
             return consultaCriada;
         }catch(error){
             console.log(error.name, error.message);

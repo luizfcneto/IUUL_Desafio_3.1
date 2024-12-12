@@ -17,11 +17,7 @@ CPF             Nome                                Dt.Nasc.        Idade
 --------------------------------------------------------------------------`
     );
     pacientesComAgendados.forEach((paciente) => {
-        console.log(paciente.toString());
-        if(paciente.consulta){
-            console.log(paciente.consulta.toShortString());
-        }
-        
+        console.log(paciente.toString());        
     });
     console.log(
 `--------------------------------------------------------------------------`

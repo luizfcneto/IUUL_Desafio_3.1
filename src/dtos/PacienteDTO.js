@@ -8,7 +8,7 @@ export default class PacienteDTO {
     #idade;
     #consultas;
 
-    constructor(cpf, nome, dataNascimento, idade = undefined, consultas = undefined) {
+    constructor(cpf, nome, dataNascimento, idade = undefined, consultas = []) {
         this.#cpf = cpf;
         this.#nome = nome;
         this.#dataNascimento = dataNascimento,
@@ -50,11 +50,12 @@ export default class PacienteDTO {
     }
 
     toString(){
-        const baseInfo = `${this.cpf.padEnd(15)} ${this.nome.padEnd(35)} ${buildDateStringFromDate(this.dataNascimento).padEnd(15)} ${this.idade}`;
+        const template = `${this.cpf.padEnd(15)} ${this.nome.padEnd(35)} ${buildDateStringFromDate(this.dataNascimento).padEnd(15)} ${this.idade}`;
         if (this.consultas && this.consultas.length > 0) {
-            return baseInfo + `\n` + this.consultas.map(consulta => consulta.toShortString()).join('\n');
+            return template + `\n` + this.consultas.map(consulta => consulta.toShortString()).join('\n');
         }
-        return baseInfo;    }
+        return template;    
+    }
 
     toJSON(){
         return {
@@ -70,20 +71,21 @@ export default class PacienteDTO {
         return new PacienteDTO(obj.cpf, obj.nome, obj.dataNascimento, obj.idade);
     }
 
-    static fromEntity(entity){
-        console.log("fromEntity de PacienteDTO", entity);
-        // const consultas = entity.consultas ? ConsultaDTO.fromEntities(entity.data, entity.horaInicial, entity.horaFinal, entity.pacienteId) : [];
+    static fromEntity(entity) {
+        const consultas = entity.consultas
+            ? entity.consultas.map(consulta => ConsultaDTO.fromEntity(consulta))
+            : [];
+    
         return new PacienteDTO(
-            entity.cpf, 
-            entity.nome, 
-            new Date(entity.dataNascimento), 
-            null, 
-            entity.consultas === undefined || entity.consultas === null ? ConsultaDTO.fromEntity({...entity}) : entity.consultas
+            entity.cpf,
+            entity.nome,
+            new Date(entity.dataNascimento),
+            null,
+            consultas
         );
-
     }
-
-    static fromEntities(entities){  
+    
+    static fromEntities(entities) {
         return entities.map(entity => PacienteDTO.fromEntity(entity));
     }
 }

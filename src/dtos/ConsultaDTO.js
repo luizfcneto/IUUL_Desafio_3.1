@@ -13,7 +13,7 @@ export default class ConsultaDTO {
         this.#horaInicial = new Date(horaInicial);
         this.#horaFinal = new Date(horaFinal);
         this.#paciente = paciente;
-        this.#tempo = this.#setTempo();
+        this.#tempo = horaInicial && horaFinal ? this.#setTempo() : undefined;
     }
 
     #setTempo(){
@@ -63,11 +63,15 @@ export default class ConsultaDTO {
         return new ConsultaDTO(obj.data, obj.horaInicial, obj.horaFinal, PacienteDTO.fromObject(obj.paciente));
     }
 
-    static fromEntity(entity){
-        console.log("fromEntity de ConsultaDTO", entity);
-        return new ConsultaDTO(entity.data, entity.horaInicial, entity.horaFinal, PacienteDTO.fromEntity(entity.paciente));
+    static fromEntity(entity) {
+        return new ConsultaDTO(
+            entity.data,
+            entity.horaInicial,
+            entity.horaFinal,
+            entity.pacienteId
+        );
     }
-
+    
     static fromEntities(entities) {
         return entities.map(entity => ConsultaDTO.fromEntity(entity));
     }
