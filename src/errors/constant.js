@@ -14,8 +14,10 @@ export const messageError = {
     CONSULTA_NAO_ENCONTRADA: "Erro: agendamento não encontrado",
     PACIENTE_AGENDADO: "Erro: paciente está agendado.",
     APRESENTACAO_AGENDA_INVALIDO: "Erro: tipo de apresentacao da agenda só pode ser 'T' ou 'P'",
-    BANCO_DE_DADOS_ERRO_CONSULTA: "Erro: ocorreu um erro ao tentarmos uma consulta no banco de dados, tente novamente mais tarde",
+    BANCO_DE_DADOS_ERRO_CONSULTA_PACIENTE: "Erro: ocorreu um erro ao tentarmos uma consulta no banco de dados, tente novamente mais tarde",
     BANCO_DE_DADOS_ERRO_CRIACAO_PACIENTE: "Erro: ocorreu um erro ao tentarmos cadastrar o paciente no banco de dados, tente novamente mais tarde",
     BANCO_DE_DADOS_ERRO_EXCLUSAO_PACIENTE: "Erro: ocoreu um erro ao tentarmos remover o paciente no banco de dados, tente novamente mais tarde",
-    BANCO_DE_DADOS_ERRRO_CONSULTA_LISTA: "Erro: ocorreu um erro ao tentarmos listar todos os pacientes no banco de dados, tente novamente mais tarde"
+    BANCO_DE_DADOS_ERRRO_CONSULTA_LISTA_PACIENTE: "Erro: ocorreu um erro ao tentarmos listar todos os pacientes no banco de dados, tente novamente mais tarde",
+    BANCO_DE_DADOS_ERRO_CRIACAO_CONSULTA: "Erro: ocorreu um erro ao tentarmos cadastrar uma consulta no banco de dados, tente novamente mais tarde",
+
 }

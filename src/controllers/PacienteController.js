@@ -28,6 +28,7 @@ class PacienteController {
 
     async listarPacientes(orderBy = undefined){
         const pacientesEComConsultasAgendadas = await this.#consultorioService.listarPacientes(orderBy);
+        pacientesEComConsultasAgendadas.forEach(paciente => console.log(paciente.toJSON()));
         listPacientes(pacientesEComConsultasAgendadas);
     }
 

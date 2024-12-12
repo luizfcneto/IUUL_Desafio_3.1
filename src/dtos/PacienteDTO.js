@@ -50,8 +50,11 @@ export default class PacienteDTO {
     }
 
     toString(){
-        return `${this.cpf.padEnd(15)} ${this.nome.padEnd(35)} ${buildDateStringFromDate(this.dataNascimento).padEnd(15)} ${this.idade}`;
-    }
+        const baseInfo = `${this.cpf.padEnd(15)} ${this.nome.padEnd(35)} ${buildDateStringFromDate(this.dataNascimento).padEnd(15)} ${this.idade}`;
+        if (this.consultas && this.consultas.length > 0) {
+            return baseInfo + `\n` + this.consultas.map(consulta => consulta.toShortString()).join('\n');
+        }
+        return baseInfo;    }
 
     toJSON(){
         return {
@@ -68,12 +71,16 @@ export default class PacienteDTO {
     }
 
     static fromEntity(entity){
+        console.log("fromEntity de PacienteDTO", entity);
+        // const consultas = entity.consultas ? ConsultaDTO.fromEntities(entity.data, entity.horaInicial, entity.horaFinal, entity.pacienteId) : [];
         return new PacienteDTO(
             entity.cpf, 
             entity.nome, 
             new Date(entity.dataNascimento), 
             null, 
-            entity.consultas ? ConsultaDTO.fromEntities(entity.consultas) : null);
+            entity.consultas === undefined || entity.consultas === null ? ConsultaDTO.fromEntity({...entity}) : entity.consultas
+        );
+
     }
 
     static fromEntities(entities){  

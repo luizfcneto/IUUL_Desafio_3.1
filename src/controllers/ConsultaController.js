@@ -10,8 +10,7 @@ class ConsultaController {
 
     async agendarConsulta(){
         try {
-            this.#consultorioService.agendarConsulta();
-            await this.#consultorioService.atualizarArquivoConsultorio();
+            await this.#consultorioService.agendarConsulta();
             showConsultaAgendadaComSucesso();
         }catch(error){
             showConsultaFalha(error.message);
@@ -20,17 +19,16 @@ class ConsultaController {
 
     async cancelarConsulta(){
         try {
-            this.#consultorioService.cancelarConsulta();
-            await this.#consultorioService.atualizarArquivoConsultorio();
+            await this.#consultorioService.cancelarConsulta();
             showConsultaCanceladaComSucesso();
         }catch(error){
             showConsultaFalha(error.message);
         }
     }
 
-    listarAgenda(){
+    async listarAgenda(){
         try {
-            const agenda = this.#consultorioService.listarAgenda();
+            const agenda = await this.#consultorioService.listarAgenda();
             listAgenda(agenda);
         }catch(error){
             showConsultaFalha(error.message);

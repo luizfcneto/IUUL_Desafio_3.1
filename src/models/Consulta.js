@@ -7,25 +7,24 @@ Consulta.init({
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        allowNull: false
+        allowNull: false,
+        autoIncrement: true,
+        unique: true
     },
     data: {
         type: DataTypes.DATEONLY,
         allowNull: false,
-        timezone: "-03:00",
     },
     horaInicial: {
-        type: DataTypes.TIME,
+        type: DataTypes.DATE,
         allowNull: false,
-        timezone: "-03:00",
     },
     horaFinal: {
-        type: DataTypes.TIME,
+        type: DataTypes.DATE,
         allowNull: false,
-        timezone: "-03:00",
     },
     tempo: {
-        type: DataTypes.SMALLINT,
+        type: DataTypes.TIME,
         allowNull: false,
     }
 }, {

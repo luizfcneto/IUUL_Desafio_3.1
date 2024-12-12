@@ -1,11 +1,9 @@
+import ConsultaDTO from "../dtos/ConsultaDTO.js";
 import PacienteDTO from "../dtos/PacienteDTO.js";
 import { messageError } from "../errors/constant.js";
-// import { consultorio } from "../index.js";
-import Consulta from "../models/Consulta.js";
-import Paciente from "../models/Paciente.js";
-import ConsultorioRepository from "../repositories/ConsultorioRepository.js";
+import ConsultaRepository from "../repositories/ConsultaRepository.js";
 import PacienteRepository from "../repositories/PacienteRepository.js";
-import { buildDate } from "../utils/dateUtils.js";
+import { buildDate, buildDateOnly } from "../utils/dateUtils.js";
 import { validateData, validateDataConsulta, validateEntradaListagemConsulta, validateHorario } from "../validations/ConsultaValidation.js";
 import { validateCPF, validateDataNascimento, validateNome } from "../validations/PacienteValidation.js";
 import { showConsultorioError } from "../views/ConsultorioView.js";
@@ -15,10 +13,12 @@ const prompt = new PromptSync({sigint: true});
 
 export default class ConsultorioService{
     #consultorioRepository;
-    #pacienteRepository
+    #pacienteRepository;
+    #consultaRepository;
 
-    constructor(pacienteRepository = undefined){
+    constructor(pacienteRepository = undefined, consultaRepository = undefined){
         this.#pacienteRepository = new PacienteRepository();
+        this.#consultaRepository = new ConsultaRepository();
     }
 
     async cadastrarPaciente(){
@@ -35,7 +35,7 @@ export default class ConsultorioService{
 
         let dataNascimento = this.leEntrada("Data de Nascimento: ");
         validateDataNascimento(dataNascimento);
-        dataNascimento = buildDate(dataNascimento);
+        dataNascimento = buildDateOnly(dataNascimento);
         const pacienteNovo = new PacienteDTO(cpf, nome, dataNascimento);
         await this.#pacienteRepository.addPaciente(pacienteNovo);
     }
@@ -45,30 +45,35 @@ export default class ConsultorioService{
         validateCPF(cpf);
         const pacienteEntity = await this.#pacienteRepository.getPacienteByCPF(cpf);
 
-        // const pacienteComConsultaFutura = this.#consultorioRepository.verificaConsultaFuturaPaciente(cpf);
-        // if(pacienteComConsultaFutura){
-        //     throw new Error(messageError.PACIENTE_AGENDADO);
-        // }
+        const pacienteTemConsultaFutura = await this.#consultaRepository.verificaConsultaFutura(cpf);
+        if(pacienteTemConsultaFutura){
+            throw new Error(messageError.PACIENTE_AGENDADO);
+        }
 
-        // this.#consultorioRepository.removeConsultasPassadasDoPaciente(pacienteExiste.cpf);
+        await this.#consultaRepository.removeConsultasPassadasPaciente(pacienteEntity.id);
         await this.#pacienteRepository.removePaciente(pacienteEntity.cpf);
     }
 
     async listarPacientes(orderBy = undefined){
+        const allowedColumns = ['p.nome', 'p.cpf'];
+        if (!allowedColumns.includes(orderBy)) {
+            throw new Error("Erro: Coluna de ordenação inválida");
+        }
         const pacientesEntity = await this.#pacienteRepository.getAllPacientesOrderBy(orderBy); 
+        console.log(pacientesEntity);
         return PacienteDTO.fromEntities(pacientesEntity);
     }
 
-    agendarConsulta(){
+    async agendarConsulta(){
         let cpf = this.leEntrada("CPF: ");
         validateCPF(cpf);
         
-        let pacienteCadastrado = this.#consultorioRepository.buscarPacientePorCPF(cpf);
-        if(pacienteCadastrado.length === 0){
+        let pacienteCadastrado = await this.#pacienteRepository.getPacienteByCPF(cpf);
+        if(!pacienteCadastrado){
             throw new Error(messageError.PACIENTE_NAO_CADASTRADO);
         }
 
-        let pacienteCadastradoTemConsultaFutura = this.#consultorioRepository.verificaConsultaFuturaPaciente(cpf);
+        let pacienteCadastradoTemConsultaFutura = await this.#consultaRepository.verificaConsultaFutura(cpf);
         if(pacienteCadastradoTemConsultaFutura){
             throw new Error(messageError.PACIENTE_JA_POSSUI_CONSULTA_FUTURA);
         }
@@ -84,25 +89,27 @@ export default class ConsultorioService{
         
         const dateHorarioInicial = buildDate(dataConsulta, horaInicial);
         const dateHorarioFinal = buildDate(dataConsulta, horaFinal);
+        dataConsulta = buildDateOnly(dataConsulta);
 
         if(dateHorarioFinal < dateHorarioInicial){
             throw new Error(messageError.DATA_CONSULTA_INVALIDA);
         }
 
-        const dataConsultaDisponivel = this.#consultorioRepository.verificaDataConsultaDisponivel(dateHorarioInicial, dateHorarioFinal);
+        let consultaNova = new ConsultaDTO(dataConsulta, dateHorarioInicial, dateHorarioFinal, pacienteCadastrado.id); 
+
+        const dataConsultaDisponivel = await this.#consultaRepository.verificaHorarioDisponivel(consultaNova);
         if(dataConsultaDisponivel){
-            const consultaNova = new Consulta(dateHorarioInicial, dateHorarioInicial, dateHorarioFinal, pacienteCadastrado[0]);
-            this.#consultorioRepository.addConsulta(consultaNova);
+            await this.#consultaRepository.addConsulta(consultaNova);
         }else {
             throw new Error(messageError.HORARIO_CONSULTA_INDISPONIVEL);
         }
     }
 
-    cancelarConsulta(){
+    async cancelarConsulta(){
         let cpf = this.leEntrada("CPF: ");
         validateCPF(cpf);
         
-        let pacienteCadastrado = this.#consultorioRepository.buscarPacientePorCPF(cpf);
+        let pacienteCadastrado = await this.#pacienteRepository.getPacienteByCPF(cpf);
         if(pacienteCadastrado.length === 0){
             throw new Error(messageError.PACIENTE_NAO_CADASTRADO);
         }
@@ -113,32 +120,34 @@ export default class ConsultorioService{
         let horaInicial = this.leEntrada("Hora inicial: ");
         validateHorario(horaInicial);
 
-        const dateHorarioInicioConsulta = buildDate(dataConsulta, horaInicial);
-        this.#consultorioRepository.removeConsultaDePacientePorCPFEData(cpf, dateHorarioInicioConsulta);
+        const dataComHorarioInicioConsulta = buildDate(dataConsulta, horaInicial);
+        await this.#consultaRepository.removeConsultaPacienteDataComHorarioInicio(pacienteCadastrado.id, dataComHorarioInicioConsulta);
     }
 
-    listarAgenda(){
+    async listarAgenda(){
         let tipoApresentacao = this.leEntrada("T-Toda ou P-Periodo: ");
         validateEntradaListagemConsulta(tipoApresentacao);
 
-        if(tipoApresentacao === "T"){
-            const listaAgendaSemPeriodo = consultorio.listaTodasConsultas();
-            return listaAgendaSemPeriodo;
-        }else if(tipoApresentacao === "P"){
-            let dataInicial = this.leEntrada("Data inicial: ");
-            validateData(dataInicial);
+        const consulta = await this.#consultaRepository.getConsulta("14657524712");
+        console.log(consulta);
+        // if(tipoApresentacao === "T"){
+        //     const listaAgendaSemPeriodo = consultorio.listaTodasConsultas();
+        //     return listaAgendaSemPeriodo;
+        // }else if(tipoApresentacao === "P"){
+        //     let dataInicial = this.leEntrada("Data inicial: ");
+        //     validateData(dataInicial);
 
-            let dataFinal = this.leEntrada("Data final: ");
-            validateData(dataFinal);
+        //     let dataFinal = this.leEntrada("Data final: ");
+        //     validateData(dataFinal);
 
-            dataInicial = buildDate(dataInicial);
-            dataFinal = buildDate(dataFinal);
+        //     dataInicial = buildDate(dataInicial);
+        //     dataFinal = buildDate(dataFinal);
 
-            const listaAgendaComPeriodo = consultorio.listaTodasConsultas(dataInicial, dataFinal);
-            return listaAgendaComPeriodo;
-        }else {
-            throw new Error(messageError.APRESENTACAO_AGENDA_INVALIDO);
-        }
+        //     const listaAgendaComPeriodo = consultorio.listaTodasConsultas(dataInicial, dataFinal);
+        //     return listaAgendaComPeriodo;
+        // }else {
+        //     throw new Error(messageError.APRESENTACAO_AGENDA_INVALIDO);
+        // }
     }
 
     leEntrada(variavelEntrada){

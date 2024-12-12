@@ -8,7 +8,7 @@ export default class ConsultaDTO {
     #paciente;
     #tempo;
 
-    constructor(data, horaInicial, horaFinal, paciente){
+    constructor(data, horaInicial, horaFinal, paciente, tempo = undefined){
         this.#data = data;
         this.#horaInicial = new Date(horaInicial);
         this.#horaFinal = new Date(horaFinal);
@@ -55,7 +55,7 @@ export default class ConsultaDTO {
             horaInicial: this.horaInicial,
             horaFinal: this.horaFinal,
             tempo: this.tempo,
-            paciente: this.paciente.toJSON()
+            // paciente: this.paciente.toJSON()
         }
     }
 
@@ -64,6 +64,7 @@ export default class ConsultaDTO {
     }
 
     static fromEntity(entity){
+        console.log("fromEntity de ConsultaDTO", entity);
         return new ConsultaDTO(entity.data, entity.horaInicial, entity.horaFinal, PacienteDTO.fromEntity(entity.paciente));
     }
 
