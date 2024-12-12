@@ -128,47 +128,29 @@ export default class ConsultorioService{
         let tipoApresentacao = this.leEntrada("T-Toda ou P-Periodo: ");
         validateEntradaListagemConsulta(tipoApresentacao);
 
-        const consulta = await this.#consultaRepository.getConsulta("14657524712");
         console.log(consulta);
-        // if(tipoApresentacao === "T"){
-        //     const listaAgendaSemPeriodo = consultorio.listaTodasConsultas();
-        //     return listaAgendaSemPeriodo;
-        // }else if(tipoApresentacao === "P"){
-        //     let dataInicial = this.leEntrada("Data inicial: ");
-        //     validateData(dataInicial);
+        if(tipoApresentacao === "T"){
+            // const listaAgendaSemPeriodo = consultorio.listaTodasConsultas();
+            return listaAgendaSemPeriodo;
+        }else if(tipoApresentacao === "P"){
+            let dataInicial = this.leEntrada("Data inicial: ");
+            validateData(dataInicial);
 
-        //     let dataFinal = this.leEntrada("Data final: ");
-        //     validateData(dataFinal);
+            let dataFinal = this.leEntrada("Data final: ");
+            validateData(dataFinal);
 
-        //     dataInicial = buildDate(dataInicial);
-        //     dataFinal = buildDate(dataFinal);
+            dataInicial = buildDate(dataInicial);
+            dataFinal = buildDate(dataFinal);
 
-        //     const listaAgendaComPeriodo = consultorio.listaTodasConsultas(dataInicial, dataFinal);
-        //     return listaAgendaComPeriodo;
-        // }else {
-        //     throw new Error(messageError.APRESENTACAO_AGENDA_INVALIDO);
-        // }
+            // const listaAgendaComPeriodo = consultorio.listaTodasConsultas(dataInicial, dataFinal);
+            return listaAgendaComPeriodo;
+        }else {
+            throw new Error(messageError.APRESENTACAO_AGENDA_INVALIDO);
+        }
     }
 
     leEntrada(variavelEntrada){
         return prompt(variavelEntrada);
-    }
-
-    async atualizarArquivoConsultorio(){
-        try {
-            await this.#consultorioRepository.atualizarConsultorio(consultorio);
-        }catch(error){
-            showConsultorioError(error.message);
-        }
-    }
-
-    async getConsultorioFromFile(){
-        try {
-            return await this.#consultorioRepository.getConsultorio();
-        }catch(error){
-            showConsultorioError(error.message);
-            return null;
-        }
     }
 
 }
