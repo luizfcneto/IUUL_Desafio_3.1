@@ -6,7 +6,6 @@ import PacienteRepository from "../repositories/PacienteRepository.js";
 import { buildDate, buildDateOnly } from "../utils/dateUtils.js";
 import { validateData, validateDataConsulta, validateEntradaListagemConsulta, validateHorario } from "../validations/ConsultaValidation.js";
 import { validateCPF, validateDataNascimento, validateNome } from "../validations/PacienteValidation.js";
-import { showConsultorioError } from "../views/ConsultorioView.js";
 import PromptSync from "prompt-sync";
 
 const prompt = new PromptSync({sigint: true});
@@ -57,10 +56,10 @@ export default class ConsultorioService{
     async listarPacientes(orderBy = undefined){
         const allowedColumns = ['nome', 'cpf'];
         if (!allowedColumns.includes(orderBy)) {
-            throw new Error("Erro: Coluna de ordenação inválida");
+            throw new Error();
         }
         const pacientesEntity = await this.#pacienteRepository.getAllPacientesOrderBy(orderBy); 
-        return PacienteDTO.fromEntities(pacientesEntity);
+        return PacienteDTO.fromEntities(pacientesEntity, true);
     }
 
     async agendarConsulta(){
@@ -127,11 +126,12 @@ export default class ConsultorioService{
         let tipoApresentacao = this.leEntrada("T-Toda ou P-Periodo: ");
         validateEntradaListagemConsulta(tipoApresentacao);
 
-        console.log(consulta);
         if(tipoApresentacao === "T"){
-            // const listaAgendaSemPeriodo = consultorio.listaTodasConsultas();
-            return listaAgendaSemPeriodo;
+            console.log("tipoApresentacao", tipoApresentacao);
+            const listaAgendaSemPeriodo = await this.#consultaRepository.listaTodasConsultas();
+            return ConsultaDTO.fromEntities(listaAgendaSemPeriodo, true);
         }else if(tipoApresentacao === "P"){
+            console.log("tipoApresentacao", tipoApresentacao);
             let dataInicial = this.leEntrada("Data inicial: ");
             validateData(dataInicial);
 
@@ -141,8 +141,8 @@ export default class ConsultorioService{
             dataInicial = buildDate(dataInicial);
             dataFinal = buildDate(dataFinal);
 
-            // const listaAgendaComPeriodo = consultorio.listaTodasConsultas(dataInicial, dataFinal);
-            return listaAgendaComPeriodo;
+            const listaAgendaComPeriodo = await this.#consultaRepository.listaTodasConsultas(dataInicial, dataFinal);
+            return ConsultaDTO.fromEntities(listaAgendaComPeriodo, true);
         }else {
             throw new Error(messageError.APRESENTACAO_AGENDA_INVALIDO);
         }

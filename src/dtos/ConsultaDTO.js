@@ -41,7 +41,7 @@ export default class ConsultaDTO {
     }
 
     toString(){
-        return `${buildDateStringFromDate(new Date(this.data)).padEnd(11)} ${buildHorarioStringFromDate(new Date(this.horaInicial)).padEnd(7)} ${buildHorarioStringFromDate(new Date(this.horaFinal)).padEnd(7)} ${this.tempo.padEnd(7)} ${this.paciente.nome.padEnd(25)} ${this.paciente.dataNascimento}`;
+        return `${buildDateStringFromDate(new Date(this.data)).padEnd(11)} ${buildHorarioStringFromDate(new Date(this.horaInicial)).padEnd(7)} ${buildHorarioStringFromDate(new Date(this.horaFinal)).padEnd(7)} ${this.tempo.padEnd(7)} ${this.paciente.nome.padEnd(25)} ${buildDateStringFromDate(this.paciente.dataNascimento)}`;
     }
 
     toShortString(){
@@ -55,7 +55,7 @@ export default class ConsultaDTO {
             horaInicial: this.horaInicial,
             horaFinal: this.horaFinal,
             tempo: this.tempo,
-            // paciente: this.paciente.toJSON()
+            paciente: this.paciente.toJSON()
         }
     }
 
@@ -63,16 +63,22 @@ export default class ConsultaDTO {
         return new ConsultaDTO(obj.data, obj.horaInicial, obj.horaFinal, PacienteDTO.fromObject(obj.paciente));
     }
 
-    static fromEntity(entity) {
+    static fromEntity(entity, includePaciente = true) {
+        const isFromPaciente = !!entity.paciente;
+
+        const paciente = includePaciente && isFromPaciente && entity.paciente
+            ? PacienteDTO.fromEntity(entity.paciente, false)
+            : undefined;
+
         return new ConsultaDTO(
             entity.data,
             entity.horaInicial,
             entity.horaFinal,
-            entity.pacienteId
+            paciente
         );
     }
     
-    static fromEntities(entities) {
-        return entities.map(entity => ConsultaDTO.fromEntity(entity));
+    static fromEntities(entities, includePaciente = true) {
+        return entities.map(entity => ConsultaDTO.fromEntity(entity, includePaciente));
     }
 }

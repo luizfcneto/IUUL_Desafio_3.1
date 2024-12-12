@@ -22,7 +22,7 @@ export default class PacienteRepository {
 
     async getAllPacientesOrderBy(orderProp){
         try {
-            const pacientes = await Paciente.findAll({
+            await Paciente.findAll({
                 include: [
                     {
                         model: Consulta,
@@ -37,8 +37,6 @@ export default class PacienteRepository {
                 ],
                 order: [[orderProp, 'ASC']]
             });
-
-            return pacientes;
 
         }catch(error){
             console.log(error.name, error.message);
@@ -61,12 +59,12 @@ export default class PacienteRepository {
 
     async removePaciente(cpf){
         try {
-            const pacienteRemovido = await Paciente.destroy({
+            await Paciente.destroy({
                 where: {
                     cpf: cpf
                 }
             });
-            return pacienteRemovido;
+            
         }catch(error){
             console.log(error.name, error.message);
             throw new Error(messageError.BANCO_DE_DADOS_ERRO_EXCLUSAO_PACIENTE);

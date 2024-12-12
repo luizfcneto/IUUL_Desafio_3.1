@@ -77,15 +77,35 @@ export default class PacienteDTO {
             : [];
     
         return new PacienteDTO(
-            entity.cpf,
-            entity.nome,
-            new Date(entity.dataNascimento),
+            entity.paciente.cpf,
+            entity.paciente.nome,
+            new Date(entity.paciente.dataNascimento),
+            null,
+            consultas
+        );
+    }
+
+    static fromEntity(entity, includeConsultas = true) {
+        const isFromConsulta = !!entity.paciente;
+
+        const consultas = includeConsultas && (entity.consultas || [])
+            ? (isFromConsulta
+                ? entity.consultas.map(consulta => ConsultaDTO.fromEntity(consulta, false))
+                : entity.consultas.map(consulta => ConsultaDTO.fromEntity(consulta, false)))
+            : [];
+
+        const paciente = isFromConsulta ? entity.paciente : entity;
+
+        return new PacienteDTO(
+            paciente.cpf,
+            paciente.nome,
+            new Date(paciente.dataNascimento),
             null,
             consultas
         );
     }
     
-    static fromEntities(entities) {
-        return entities.map(entity => PacienteDTO.fromEntity(entity));
+    static fromEntities(entities, includeConsultas = true) {
+        return entities.map(entity => PacienteDTO.fromEntity(entity, includeConsultas));
     }
 }

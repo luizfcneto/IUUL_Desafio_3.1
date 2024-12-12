@@ -29,6 +29,7 @@ class ConsultaController {
     async listarAgenda(){
         try {
             const agenda = await this.#consultorioService.listarAgenda();
+            agenda.forEach(consulta => console.log(consulta.toJSON()));
             listAgenda(agenda);
         }catch(error){
             showConsultaFalha(error.message);

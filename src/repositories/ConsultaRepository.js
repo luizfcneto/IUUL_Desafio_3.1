@@ -1,7 +1,8 @@
 import { messageError } from "../errors/constant.js";
 import Consulta from "../models/Consulta.js";
 import sequelize from "../config/sequelizeConfig.js";
-import { QueryTypes } from "sequelize";
+import { Op, QueryTypes } from "sequelize";
+import Paciente from "../models/Paciente.js";
 
 export default class ConsultaRepository {
     constructor(){}
@@ -20,7 +21,7 @@ export default class ConsultaRepository {
             return consultaEncontrada;
         }catch(error){
             console.log(error.name, error.message);
-            throw new Error("Erro: erro ao tentar realizar uma busca de uma consulta");
+            throw new Error(messageError.BANCO_DE_DADOS_ERRO_BUSCA_DE_UMA_CONSULTA);
         }
     }
     
@@ -41,7 +42,7 @@ export default class ConsultaRepository {
             return results.length === 0;
         }catch(error){
             console.log(error.name, error.message);
-            throw new Error("Erro: erro ao tentar verificar consulta com horario disponível");
+            throw new Error(messageError.BANCO_DE_DADOS_ERRO_CONSULTA_COM_HORARIO_INDISPONIVEL);
         }
     }
 
@@ -63,7 +64,7 @@ export default class ConsultaRepository {
 
         }catch(error){
             console.log(error.name, error.message);
-            throw new Error("Erro: erro ao tentar cadastrar nova consulta, pois paciente já possui consulta marcada");
+            throw new Error(messageError.BANCO_DE_DADOS_ERRO_PACIENTE_JA_POSSUI_CONSULTA_MARCADA);
         }
     }
 
@@ -95,12 +96,11 @@ export default class ConsultaRepository {
 
         }catch(error){
             console.log(error.name, error.message);
-            throw new Error("Erro: erro ao tentar remover consultas passadas de paciente");
+            throw new Error(messageError.BANCO_DE_DADOS_ERRO_EXCLUIR_CONSULTAS_PASSADAS_PACIENTE);
         }
     }
 
     async removeConsultaPacienteDataComHorarioInicio(pacienteId, dataComHorarioInicioConsulta){
-        console.log(pacienteId, dataComHorarioInicioConsulta);
         try {
             await sequelize.query(
                 `DELETE FROM "Consulta" c
@@ -114,8 +114,31 @@ export default class ConsultaRepository {
 
         }catch(error){
             console.log(error.name, error.message);
-            throw new Error("Erro: erro ao tentar remover uma consulta de um paciente");
+            throw new Error(messageError.BANCO_DE_DADOS_ERRO_EXCLUSAO_CONSULTA_PACIENTE);
         }
+    }
 
+    async listaTodasConsultas(dataInicial = null, dataFinal = null){
+        try {
+            const whereClause = {};
+            if(dataInicial && dataFinal){
+                whereClause.data = {
+                    [Op.between]: [dataInicial, dataFinal]
+                };
+            }
+
+            await Consulta.findAll({
+                where: whereClause,
+                include: [{
+                    model: Paciente,
+                    as: "paciente",
+                }],
+                order: [['data', 'ASC'],  ['horaInicial', 'ASC']]
+            });
+
+        }catch(error){
+            console.log(error.name, error.message);
+            throw new Error(messageError.BANCO_DE_DADOS_ERRO_LISTAR_TODAS_CONSULTAS);
+        }
     }
 }

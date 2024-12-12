@@ -4,8 +4,6 @@ export const messageError = {
     DATA_NASCIMENTO_INVALIDA: "Erro: Data de Nascimento invalida",
     PACIENTE_MENOR_13_ANOS: "Erro: paciente deve ter pelo menos 13 anos",
     PACIENTE_JA_CADASTRADO: "Erro: CPF já cadastrado",
-    ERRO_ATUALIZAR_CONSULTORIO: "Erro: atualizar arquivo de consultorio.json",
-    ERRO_BUSCAR_CONSULTORIO: "Erro: buscar consultorio de arquivo consultorio.json",
     PACIENTE_NAO_CADASTRADO: "Erro: paciente não cadastrado",
     DATA_CONSULTA_INVALIDA: "Erro: Data da consulta invalida",
     HORARIO_INDALIDO: "Erro: Horario da consulta invalida",
@@ -14,10 +12,16 @@ export const messageError = {
     CONSULTA_NAO_ENCONTRADA: "Erro: agendamento não encontrado",
     PACIENTE_AGENDADO: "Erro: paciente está agendado.",
     APRESENTACAO_AGENDA_INVALIDO: "Erro: tipo de apresentacao da agenda só pode ser 'T' ou 'P'",
+    METODO_DE_ORDENACAO_INVALIDO: "Erro: Coluna de ordenação inválida",
     BANCO_DE_DADOS_ERRO_CONSULTA_PACIENTE: "Erro: ocorreu um erro ao tentarmos uma consulta no banco de dados, tente novamente mais tarde",
     BANCO_DE_DADOS_ERRO_CRIACAO_PACIENTE: "Erro: ocorreu um erro ao tentarmos cadastrar o paciente no banco de dados, tente novamente mais tarde",
     BANCO_DE_DADOS_ERRO_EXCLUSAO_PACIENTE: "Erro: ocoreu um erro ao tentarmos remover o paciente no banco de dados, tente novamente mais tarde",
     BANCO_DE_DADOS_ERRRO_CONSULTA_LISTA_PACIENTE: "Erro: ocorreu um erro ao tentarmos listar todos os pacientes no banco de dados, tente novamente mais tarde",
     BANCO_DE_DADOS_ERRO_CRIACAO_CONSULTA: "Erro: ocorreu um erro ao tentarmos cadastrar uma consulta no banco de dados, tente novamente mais tarde",
-
+    BANCO_DE_DADOS_ERRO_EXCLUSAO_CONSULTA_PACIENTE: "Erro: erro ao tentar remover uma consulta de um paciente",
+    BANCO_DE_DADOS_ERRO_LISTAR_TODAS_CONSULTAS: "Erro: erro ao tentar listar todas as consultas",
+    BANCO_DE_DADOS_ERRO_EXCLUIR_CONSULTAS_PASSADAS_PACIENTE :"Erro: erro ao tentar remover consultas passadas de paciente",
+    BANCO_DE_DADOS_ERRO_PACIENTE_JA_POSSUI_CONSULTA_MARCADA: "Erro: erro ao tentar cadastrar nova consulta, pois paciente já possui consulta marcada",
+    BANCO_DE_DADOS_ERRO_CONSULTA_COM_HORARIO_INDISPONIVEL: "Erro: erro ao tentar verificar consulta com horario disponível",
+    BANCO_DE_DADOS_ERRO_BUSCA_DE_UMA_CONSULTA: "Erro: erro ao tentar realizar uma busca de uma consulta"
 }
